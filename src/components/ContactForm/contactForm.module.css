@@ -1,0 +1,15 @@
+.contactForm {
+    border: 1px solid #000;
+    width: 350px;
+   display: flex;
+   flex-direction: column;
+}
+.formBtn {
+    margin-bottom: 10px;
+    width: 100px;
+    margin-left: 10px;
+}
+.formLabel {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}

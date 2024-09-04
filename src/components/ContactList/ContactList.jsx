@@ -1,25 +1,29 @@
+import { ContactListItem } from '../ContactListItem/ContactListItem';
+import css from './ContactList.module.css';
+import { useSelector } from 'react-redux';
+import { getContacts, getFilter } from '../../redux/selectors';
 
-import { ContactListItem } from 'components/ContactListItem/ContactListItem';
-import PropTypes from 'prop-types';
-import css from './ContactList.module.css'
+const getFilteredContacts = (contacts, filter) => {
+  return contacts?.filter(c => filter
+    .findBy === '' || c[filter.findBy].toLowerCase().includes(filter.value)) || [];
+};
 
-export const ContactList = ({ filterContact, deleteContact }) => {
-  const filteredContacts = filterContact();
+export const ContactList = () => {
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+
+  const filteredContacts = getFilteredContacts(contacts, filter);
 
   return (
-    <ul className={css.contactList}>
-      {filteredContacts.map(filteredContact => (
+    <div className={css['contact-list']}>
+    <ul>
+      {filteredContacts.map(contact => (
         <ContactListItem
-          key={filteredContact.id}
-          filteredContact={filteredContact}
-          deleteContact={deleteContact}
+          key={contact.id}
+          contact={contact}
         />
       ))}
     </ul>
+    </div>
   );
-};
-
-ContactList.propTypes = {
-  filterContact: PropTypes.func.isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };

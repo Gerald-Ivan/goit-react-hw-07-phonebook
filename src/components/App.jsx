@@ -1,43 +1,40 @@
-import { ContactForm } from "./ContactForm/ContactForm"
-import { ContactList } from "./ContactList/ContactList";
-import { Filter } from "./Filter/Filter";
+import { ContactForm } from './ContactForm/ContactForm';
+import { ContactList } from './ContactList/ContactList';
+import { Filter } from './Filter/Filter';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIsLoading } from '../redux/selectors';
+import { fetchContacts } from '../redux/operations';
+import { useEffect } from 'react';
+import { TailSpin } from 'react-loader-spinner';
 
-import { useSelector,useDispatch } from "react-redux";
-import { getContacts,getFilter } from "../redux/selectors";
-import { addContact,deleteContact } from "../redux/contactsSlice";
-import { setFilter } from "../redux/filterSlice";
-
-export const App = () => {
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
+export function App() {
   const dispatch = useDispatch();
+  const isLoading = useSelector(getIsLoading);
 
-  const handleaddContact = newContact => {
-    dispatch(addContact(newContact));
-  };
 
-  const handleDeleteContact = id => {
-    dispatch(deleteContact(id));
-  };
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
-  const handleFilterChange = filterValue => {
-    dispatch(setFilter(filterValue));
-  };
-
-  const filterContact = () =>
-    contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
 
     return (
-      <>
-      <ContactForm addContact={handleaddContact} contacts={contacts}/>
-      <Filter filter={filter} changeFilter={handleFilterChange}/>
-      <ContactList filterContact={filterContact}
-          deleteContact={handleDeleteContact}/>
-      
-      </>
-    )
+      <div className="container">
+        <h1>Phonebook</h1>
+        <div className="phonebook-container">
+          <div>
+          <ContactForm />
+          </div>
+          <div>
+            <h2>Contacts</h2>
+            <Filter />
+            {isLoading && (
+          <TailSpin/>
+        )}
+            <ContactList />
+            
+          </div>
+        </div>
+      </div>
+    );
 
 }
-    
